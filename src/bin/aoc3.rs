@@ -1,4 +1,4 @@
-use std::{fs, collections::{BinaryHeap, HashSet}, hash::Hash};
+use std::{fs, collections::HashSet};
 
 fn score_char( c: char ) -> u8 {
     if c >= 'a' && c <= 'z' {

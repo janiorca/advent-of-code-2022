@@ -16,8 +16,6 @@ fn main() {
         if values[1] >= values[2] && values[3] >= values[0] {
             overlap += 1;
         }
-
     }
     println!("Contained: {}, Overlap: {}", contained, overlap);
-
 }

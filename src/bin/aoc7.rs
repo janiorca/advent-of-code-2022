@@ -1,4 +1,4 @@
-use std::{fs, collections::{HashSet, HashMap}};
+use std::{fs, collections::{HashSet, HashMap}, hash::Hash};
 
 fn main() {
     let input = fs::read_to_string("inputs/aoc7.txt").unwrap();
@@ -47,6 +47,7 @@ fn main() {
     }
 
     let mut sum_of_totals = 0;
+    let mut size_by_path = HashMap::<String,u64>::new(); 
     for sub_dir in dir_size.keys() {
         let mut total_size = 0;
         for entry in &dir_size {
@@ -54,10 +55,26 @@ fn main() {
                 total_size += entry.1;
             }
         }
-        println!( "total size; {}", total_size);
+        size_by_path.insert(  sub_dir.clone(), total_size );
         if total_size <= 100000 {
             sum_of_totals += total_size;
         }
     }
+    // Part 1
     println!( "sum of totals; {}", sum_of_totals);
+
+    let total_used = size_by_path[ "/" ];
+    let free = 70000000 - total_used;
+    let required_min = 30000000 - free; 
+    let mut best_size = 99999999;
+    // PArt 2
+    for sub_dir in dir_size.keys() {
+        let path_size = size_by_path[ sub_dir ];
+        if path_size > required_min && path_size < best_size {
+            best_size = path_size;
+        } 
+    }
+    // Part2
+    println!( "best size; {}", best_size);
+
 }

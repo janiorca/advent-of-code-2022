@@ -1,4 +1,4 @@
-use std::{fs, collections::{HashSet, HashMap}, hash::Hash};
+use std::{fs, collections::HashMap};
 
 fn main() {
     let input = fs::read_to_string("inputs/aoc7.txt").unwrap();

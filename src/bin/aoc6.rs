@@ -1,4 +1,4 @@
-use std::{fs, collections::{HashSet, HashMap}};
+use std::{fs, collections::HashSet};
 
 fn is_unique( input: &[u8] ) -> bool {
     let mut chars: HashSet<u8> = HashSet::new();

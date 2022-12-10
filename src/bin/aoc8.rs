@@ -1,4 +1,4 @@
-use std::{fs, collections::{HashSet, HashMap}, hash::Hash};
+use std::fs;
 
 fn update_scan( x: usize, y: usize, highest_seen: &mut i8, tree_mask: &mut Vec<Vec<u32>>, tree_map: &Vec<Vec<u8>>) {
     if tree_map[y][x] as i8 > *highest_seen {
@@ -59,7 +59,6 @@ fn main() {
     // Part 2
     let mut best_score = 0;
     for y in 1..height-1{
-        let mut highest_seen = [-1 as i8;4];
         for x in 1..width-1 {
             let start_pos = (y as i32, x as i32 );
             let mut score =  cast_ray( start_pos, (0,-1), &tree_map );

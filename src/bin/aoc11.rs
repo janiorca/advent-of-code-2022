@@ -1,4 +1,4 @@
-use std::{fs, collections::{HashSet, VecDeque, HashMap}, hash::Hash};
+use std::{fs, collections::VecDeque};
 
 struct Monkey{
     held_items: VecDeque<u64>,
@@ -82,9 +82,9 @@ fn calculate_monkey_business( mut monkeys: Vec<Monkey>, relief: u64, rounds: i64
 }
 
 fn main() {
-    let mut monkeys = get_monkey_data();
+    let monkeys = get_monkey_data();
     println!("{} monkey business", calculate_monkey_business(monkeys, 3, 20));
 
-    let mut monkeys = get_monkey_data();
-    println!("{} HArd monkey business", calculate_monkey_business(monkeys, 1, 10000));
+    let monkeys = get_monkey_data();
+    println!("{} Hard monkey business", calculate_monkey_business(monkeys, 1, 10000));
 }

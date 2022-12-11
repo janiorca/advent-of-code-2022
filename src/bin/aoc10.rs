@@ -1,4 +1,4 @@
-use std::{fs, collections::HashSet};
+use std::fs;
 
 struct CRT{
     current_line: String,
@@ -37,7 +37,7 @@ impl Register{
 fn main() {
     // Part1 & Part2
     let input = fs::read_to_string("inputs/aoc10.txt").unwrap();
-    let mut crt = CRT{ current_line: "".to_string(),  horizontal_pos: 0};
+    let crt = CRT{ current_line: "".to_string(),  horizontal_pos: 0};
     let mut register = Register{ crt, value: 1, sampled_values:0, current_cycle:0 };
     for line in input.lines() {
         let instruction_parts: Vec<&str> = line.split(' ').collect();

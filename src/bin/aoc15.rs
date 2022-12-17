@@ -1,4 +1,4 @@
-use std::{fs, collections::{HashSet, HashMap}};
+use std::{fs, collections::HashSet};
 
 fn generate_spans( sensors: &Vec<((i64,i64), i64)>, scan_y: i64 ) -> Vec<(i64,i64)> {
     let mut spans: Vec<(i64,i64)> = Vec::new();

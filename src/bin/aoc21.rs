@@ -1,11 +1,13 @@
 use std::{fs, collections::HashMap};
 
+#[derive(Clone) ]
 enum Operation{
     Add,
     Subtract,
     Multiply,
     Divide
 }
+#[derive(Clone) ]
 enum OperationType{
     Resolved{ value: i64  },
     Unresolved{ operation: Operation, left: String, right: String},
@@ -40,23 +42,21 @@ fn get_monkeys() -> HashMap<String, OperationType > {
 fn eval_operand( operand: &OperationType ) -> Option<i64> {
     return match operand {
         OperationType::Resolved{ value } => Some( *value ),
-        OperationType::Unresolved { operation, left, right } => None
+        OperationType::Unresolved { operation: _, left: _, right: _ } => None
     }
 }
 
-fn main() {
-    let mut monkey_ops = get_monkeys();
-
+fn evaluate( mut ops: HashMap<String, OperationType > ) -> i64 {
     loop{
-        let names = monkey_ops.keys().cloned().collect::<Vec<String>>();
+        let names = ops.keys().cloned().collect::<Vec<String>>();
         for name in names {
             // Are the operands resolved
-            let operation_type = monkey_ops.get(&name).unwrap();
+            let operation_type = ops.get(&name).unwrap();
             match operation_type {
-                OperationType::Resolved{ value } => continue,
+                OperationType::Resolved{ value: _ } => continue,
                 OperationType::Unresolved { operation, left, right } => {
-                    let left_value = eval_operand( monkey_ops.get(left).unwrap());
-                    let right_value = eval_operand( monkey_ops.get(right).unwrap());
+                    let left_value = eval_operand( ops.get(left).unwrap());
+                    let right_value = eval_operand( ops.get(right).unwrap());
                     if left_value.is_some() && right_value.is_some() {
                         let result = match operation {
                             Operation::Add => left_value.unwrap() + right_value.unwrap(),                            
@@ -64,15 +64,61 @@ fn main() {
                             Operation::Divide => left_value.unwrap() / right_value.unwrap(),                            
                             Operation::Multiply => left_value.unwrap() * right_value.unwrap(),                            
                         };
-                        monkey_ops.insert(name, OperationType::Resolved { value: result });
+                        ops.insert(name, OperationType::Resolved { value: result });
                     }
                 }
             }
         }
-        if let OperationType::Resolved { value } = monkey_ops.get("root").unwrap() {
-            println!( "ROOT: {}", value);
-            break;
+        if let OperationType::Resolved { value } = ops.get("root").unwrap() {
+            return *value;
         } 
     }
+}
 
+fn evaluate_with_value( mut ops: HashMap<String, OperationType >, value: i64 ) -> i64 {
+    ops.insert("humn".to_string(), OperationType::Resolved { value });
+
+    return evaluate(ops);
+}
+
+fn solve( mut ops: HashMap<String, OperationType > ) -> i64 {
+    // Tweak the human op to be - , that way we solve for 0-root 
+    let root = ops.remove("root").unwrap();
+    if let OperationType::Unresolved { operation: _, left, right } = root {
+        ops.insert("root".to_string(), OperationType::Unresolved { operation: Operation::Subtract, left: left.clone(), right: right.clone() } );
+    } else {
+        panic!( "cant update root")
+    }
+
+    // // find initial range
+    let mut lp = (0, evaluate_with_value(ops.clone(), 0) );
+    let mut rp = (1,evaluate_with_value(ops.clone(), 1) );
+    while  lp.1.signum() == rp.1.signum()  {
+        lp = rp;
+        rp = ( lp.0*2, evaluate_with_value(ops.clone(), lp.0*2));
+    }
+
+    // use the bisection method to find the root
+    loop{
+        let mid = (lp.0 + rp.0 )/2;
+        let mp = ( mid, evaluate_with_value(ops.clone(), mid) );
+        if mp.1.signum() != lp.1.signum() { 
+            rp = mp;
+        } else {
+            lp = mp;
+        }
+        if lp.1==0 { return lp.0 }
+        if rp.1==0 { return rp.0 }
+    }
+}
+
+fn main() {
+    let monkey_ops = get_monkeys();
+    // Part 1
+    let result = evaluate(monkey_ops.clone());
+    println!( "evaluates: {}", result);
+
+    // Part 2
+    let result = solve(monkey_ops.clone());
+    println!( "part 2 root: {}", result);
 }

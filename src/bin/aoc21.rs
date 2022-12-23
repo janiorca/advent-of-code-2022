@@ -82,7 +82,7 @@ fn evaluate_with_value( mut ops: HashMap<String, OperationType >, value: i64 ) -
 }
 
 fn solve( mut ops: HashMap<String, OperationType > ) -> i64 {
-    // Tweak the human op to be - , that way we solve for 0-root 
+    // Tweak the root op to be - , that way we can solve for 0-root 
     let root = ops.remove("root").unwrap();
     if let OperationType::Unresolved { operation: _, left, right } = root {
         ops.insert("root".to_string(), OperationType::Unresolved { operation: Operation::Subtract, left: left.clone(), right: right.clone() } );
